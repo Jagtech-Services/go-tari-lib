@@ -160,11 +160,20 @@ var grpcConn *grpc.ClientConn
 // multiple nodes — there is exactly one shared connection/address for the whole process. New
 // code should use NewClient(nodeAddress) instead, which returns an independently-safe *Client
 // for exactly one node's connection, safe to create as many of as needed.
-func InitNodeGRPC(nodeAddress string) {
+//
+// Returns any error from the underlying dial (previously silently discarded). Existing callers
+// that invoke this as a bare statement (e.g. `nodeGRPC.InitNodeGRPC(addr)`) are unaffected: Go
+// allows discarding a function's return value(s) with no compile error.
+func InitNodeGRPC(nodeAddress string) error {
 	grpcNodeAddress = nodeAddress
 	var opts []grpc.DialOption
 	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	grpcConn, _ = grpc.NewClient(grpcNodeAddress, opts...)
+	conn, err := grpc.NewClient(grpcNodeAddress, opts...)
+	if err != nil {
+		return err
+	}
+	grpcConn = conn
+	return nil
 }
 
 // GetTipInfo wraps the GetTipInfo GRPC call and handles the response from the upstream
@@ -173,6 +182,16 @@ func InitNodeGRPC(nodeAddress string) {
 func GetTipInfo() (*tari_generated.TipInfoResponse, error) {
 	client := tari_generated.NewBaseNodeClient(grpcConn)
 	return client.GetTipInfo(context.Background(), &tari_generated.Empty{})
+}
+
+// GetTipInfoCtx wraps the GetTipInfo GRPC call and handles the response from the upstream,
+// threading the caller-supplied ctx through to the underlying gRPC call instead of an internal
+// context.Background(), so callers can cancel/timeout the RPC.
+//
+// Deprecated: uses the unsafe package-level shared connection. Use (*Client).GetTipInfo instead.
+func GetTipInfoCtx(ctx context.Context) (*tari_generated.TipInfoResponse, error) {
+	client := tari_generated.NewBaseNodeClient(grpcConn)
+	return client.GetTipInfo(ctx, &tari_generated.Empty{})
 }
 
 // GetBlockTemplate wraps the GetNewBlockTemplate call, requires the type of blockTemplate to generate
@@ -197,6 +216,18 @@ func GetBlockWithCoinbases(requestData *tari_generated.GetNewBlockWithCoinbasesR
 func GetNewBlockTemplateWithCoinbases(requestData *tari_generated.GetNewBlockTemplateWithCoinbasesRequest) (*tari_generated.GetNewBlockResult, error) {
 	client := tari_generated.NewBaseNodeClient(grpcConn)
 	return client.GetNewBlockTemplateWithCoinbases(context.Background(), requestData)
+}
+
+// GetNewBlockTemplateWithCoinbasesCtx This incorrectly tells you that you're getting a
+// template, but the response is a full block. Threads the caller-supplied ctx through to the
+// underlying gRPC call instead of an internal context.Background(), so callers can
+// cancel/timeout the RPC.
+//
+// Deprecated: uses the unsafe package-level shared connection. Use
+// (*Client).GetNewBlockTemplateWithCoinbases instead.
+func GetNewBlockTemplateWithCoinbasesCtx(ctx context.Context, requestData *tari_generated.GetNewBlockTemplateWithCoinbasesRequest) (*tari_generated.GetNewBlockResult, error) {
+	client := tari_generated.NewBaseNodeClient(grpcConn)
+	return client.GetNewBlockTemplateWithCoinbases(ctx, requestData)
 }
 
 // GetNetworkState wraps the GetNetworkState RPC call
@@ -251,6 +282,16 @@ func GetHeaderByHash(blockHash []byte) (*tari_generated.BlockHeaderResponse, err
 func SubmitBlock(requestData *tari_generated.Block) (*tari_generated.SubmitBlockResponse, error) {
 	client := tari_generated.NewBaseNodeClient(grpcConn)
 	return client.SubmitBlock(context.Background(), requestData)
+}
+
+// SubmitBlockCtx sends blocks to the daemon for processing, threading the caller-supplied ctx
+// through to the underlying gRPC call instead of an internal context.Background(), so callers
+// (e.g. a mining pool's block-submission path) can cancel/timeout the RPC.
+//
+// Deprecated: uses the unsafe package-level shared connection. Use (*Client).SubmitBlock instead.
+func SubmitBlockCtx(ctx context.Context, requestData *tari_generated.Block) (*tari_generated.SubmitBlockResponse, error) {
+	client := tari_generated.NewBaseNodeClient(grpcConn)
+	return client.SubmitBlock(ctx, requestData)
 }
 
 // GetNetworkDiff pulls the network diff of a given block, or it will just use tip if you give it a 0
