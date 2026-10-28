@@ -1,11 +1,11 @@
-module github.com/Snipa22/go-tari-lib/v3
+module github.com/Jagtech-Services/go-tari-lib/v3
 
 go 1.24.0
 
 toolchain go1.24.13
 
 require (
-	github.com/Snipa22/go-tari-grpc-lib/v3 v3.2.1-0.20260816155812-abc39e19311d
+	github.com/Jagtech-Services/go-tari-grpc-lib/v3 v3.5.0
 	github.com/flynn/noise v1.1.0
 	github.com/gtank/ristretto255 v0.2.0
 	github.com/hashicorp/yamux v0.1.2

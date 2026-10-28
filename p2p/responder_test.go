@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Snipa22/go-tari-lib/v3/p2p"
-	pb "github.com/Snipa22/go-tari-lib/v3/p2p/proto"
-	rpcpkg "github.com/Snipa22/go-tari-lib/v3/p2p/rpc"
+	"github.com/Jagtech-Services/go-tari-lib/v3/p2p"
+	pb "github.com/Jagtech-Services/go-tari-lib/v3/p2p/proto"
+	rpcpkg "github.com/Jagtech-Services/go-tari-lib/v3/p2p/rpc"
 )
 
 // fixtureResponderPeerInfos returns the peer list p2p.Serve's PeerListProvider will feed to
