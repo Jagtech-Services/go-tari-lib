@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	pb "github.com/Snipa22/go-tari-lib/v3/p2p/proto"
+	pb "github.com/Jagtech-Services/go-tari-lib/v3/p2p/proto"
 	googleproto "google.golang.org/protobuf/proto"
 )
 

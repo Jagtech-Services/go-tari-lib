@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Snipa22/go-tari-lib/v3/p2p"
-	pb "github.com/Snipa22/go-tari-lib/v3/p2p/proto"
-	"github.com/Snipa22/go-tari-lib/v3/p2p/rpc"
+	"github.com/Jagtech-Services/go-tari-lib/v3/p2p"
+	pb "github.com/Jagtech-Services/go-tari-lib/v3/p2p/proto"
+	"github.com/Jagtech-Services/go-tari-lib/v3/p2p/rpc"
 	googleproto "google.golang.org/protobuf/proto"
 )
 
