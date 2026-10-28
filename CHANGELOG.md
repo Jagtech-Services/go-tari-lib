@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/Jagtech-Services/go-tari-lib/compare/v3.0.1...v3.1.0) (2026-10-28)
+
+
+### Features
+
+* add ctx-cancellable nodeGRPC functions ([6b74982](https://github.com/Jagtech-Services/go-tari-lib/commit/6b749825c0a53b46f047ba313df08b525e631457))
+
 ## [3.0.0](https://github.com/Snipa22/go-tari-lib/compare/v2.0.0...v3.0.0) (2026-09-19)
 
 
